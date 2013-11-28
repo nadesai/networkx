@@ -36,7 +36,9 @@ __all__ = ['fast_gnp_random_graph',
            'random_lobster',
            'random_shell_graph',
            'random_powerlaw_tree',
-           'random_powerlaw_tree_sequence']
+           'random_powerlaw_tree_sequence',
+           'kronecker_random_graph',
+           'fast_kronecker_random_graph']
 
 
 #-------------------------------------------------------------------------
@@ -962,3 +964,186 @@ def random_powerlaw_tree_sequence(n, gamma=3, seed=None, tries=100):
           "Exceeded max (%d) attempts for a valid tree sequence."%tries)
     return False
 
+def kronecker_random_graph(nIter, mtx, seed=None, directed=False):
+    """Return a random graph K_{nIter}[mtx] (Stochastic Kronecker graph).
+
+    Parameters
+    ----------
+    mtx : square matrix of floats
+        An n-by-n square "initiator" matrix of probabilities. May be a standard Python matrix or a NumPy matrix.
+    nIter : int
+        The number of times mtx is Kronecker-powered, creating a stochastic adjacency matrix.
+        The generated graph has n^{nIter} nodes, where n is the dimension of mtx as noted above.
+    seed : int, optional
+        Seed for random number generator (default=None).
+    directed : bool, optional (default=False)
+        If True return a directed graph.
+
+    Notes
+    -----
+    The stochastic Kronecker graph generation algorithm takes as input a square matrix of
+    probabilities, computes the iterated Kronecker power of this matrix, and then uses the resulting
+    stochastic adjacency matrix to generate a graph. This algorithm is O(V^2), where V=n^{nIter}.
+
+    See Also
+    --------
+    fast_kronecker_random_graph
+
+    References
+    ----------
+    .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, and Zoubin Ghahramani, 
+       "Kronecker graphs: an approach to modeling networks",
+       The Journal of Machine Learning Research, 11, 985-1042, 3/1/2010.
+    """
+    dim = len(mtx) 
+
+    if directed:
+        errorstring = "The initiator matrix must be a nonempty square matrix of probabilities."
+    else:
+        errorstring = "The initiator matrix must be a nonempty, symmetric, square matrix of probabilities."
+
+    if dim==0: 
+        raise nx.NetworkXError(errorstring)
+    for i,arr in enumerate(mtx): 
+        if len(arr)!=dim: 
+            raise nx.NetworkXError(errorstring)
+        for j,p in enumerate(arr):
+            if p<0 or p>1:
+                raise nx.NetworkXError(errorstring)
+            if not directed and mtx[i][j] != mtx[j][i]:
+                raise nx.NetworkXError(errorstring)
+
+    if nIter<1:
+        return empty_graph(1)
+
+    n = dim**nIter
+    G = empty_graph(n)
+ 
+    if directed:
+        G=nx.DiGraph(G)
+
+    G.add_nodes_from(range(n))
+    G.name="kronecker_random_graph(%s,%s)"%(n, mtx)
+
+    if not seed is None:
+        random.seed(seed)
+
+    if G.is_directed():
+        edges=itertools.product(range(n),range(n))
+    else:
+        edges=itertools.combinations_with_replacement(range(n),2)
+
+    for e in edges:
+        row,col=e
+        p=1.0
+        initPow = 1
+        for i in range(nIter):
+            rowVal = (row//initPow) % dim
+            colVal = (col//initPow) % dim
+            p = p*(mtx[rowVal][colVal])
+            initPow = initPow*dim
+        if random.random() < p:
+            G.add_edge(*e)
+
+    return G
+
+
+def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=False):
+    """Return a sparse random graph K_{nIter}[mtx] (Stochastic Kronecker graph).
+
+    Parameters
+    ----------
+    mtx : square matrix of floats
+        A square "initiator" matrix of probabilities. May be a standard Python matrix or a NumPy matrix.
+    nIter : int
+        The number of times mtx is Kronecker-powered, creating a stochastic adjacency matrix.
+        The generated graph has {dim}^{nIter} nodes, where dim is the dimension of mtx.
+    seed : int, optional
+        Seed for random number generator (default=None).
+    directed : bool, optional (default=False)
+        If True return a directed graph.
+
+    Notes
+    -----
+    The stochastic Kronecker graph generation algorithm takes as input a square matrix of
+    probabilities, computes the iterated Kronecker power of this matrix, and then uses the resulting
+    stochastic adjacency matrix to generate a graph. 
+
+    This "fast" algorithm runs in O(E) time. It thus works best when the expected number of edges in the graph is roughly O(V).
+    The expected number of edges in the graph is given by d^{nIter}, where d=\sum_{i,j} mtx[i,j] is the sum of all the elements in mtx.
+
+    See Also
+    --------
+    kronecker_random_graph
+
+    References
+    ----------
+    .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, and Zoubin Ghahramani, 
+       "Kronecker graphs: an approach to modeling networks",
+       The Journal of Machine Learning Research, 11, 985-1042, 3/1/2010.
+    """
+    dim = len(mtx)
+
+    if directed:
+        errorstring = "The initiator matrix must be a nonempty square matrix of probabilities."
+    else:
+        errorstring = "The initiator matrix must be a nonempty, symmetric, square matrix of probabilities."
+
+    if dim==0: 
+        raise nx.NetworkXError(errorstring)
+    for i,arr in enumerate(mtx): 
+        if len(arr)!=dim: 
+            raise nx.NetworkXError(errorstring)
+        for j,p in enumerate(arr):
+            if p<0 or p>1:
+                raise nx.NetworkXError(errorstring)
+            if not directed and mtx[i][j] != mtx[j][i]:
+                raise nx.NetworkXError(errorstring)
+
+    if nIter<1:
+        return empty_graph(1)
+
+    n = dim**nIter
+    G = empty_graph(n)
+    G=nx.DiGraph(G)
+
+    acc = 0.0
+    partitions = []
+    for i in range(dim):
+        for j in range(dim):
+            if mtx[i][j] != 0:
+                acc = acc+mtx[i][j]
+                partitions.append([acc,i,j])
+    mtx_sum = acc
+
+    G.add_nodes_from(range(n))
+    G.name="fast_kronecker_random_graph(%s,%s)"%(n, mtx)
+
+    if not seed is None:
+        random.seed(seed)
+
+    expected_edges=math.floor(mtx_sum**nIter)
+    num_edges = 0
+    while num_edges<expected_edges:
+        multiplier = dim**nIter
+        x = y = 0
+        for i in range(nIter):
+            multiplier = multiplier // dim
+            r = c = -1
+            p = random.uniform(0,mtx_sum)
+            for n in range(len(partitions)):
+                if partitions[n][0] >= p:
+                    r = partitions[n][1]
+                    c = partitions[n][2]
+                    break
+            x = x + r*multiplier
+            y = y + c*multiplier
+
+        if not G.has_edge(x,y):
+            G.add_edge(x,y)
+            num_edges = num_edges + 1
+
+    if not directed:
+        G=G.to_undirected()
+
+    return G
