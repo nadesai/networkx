@@ -12,6 +12,8 @@ class TestGeneratorsRandom():
         G=fast_gnp_random_graph(100,0.25,seed)
         G=gnm_random_graph(100,20,seed)
         G=dense_gnm_random_graph(100,20,seed)
+        G=kronecker_random_graph(5,[[0.1,0.1],[0.1,0.1]],seed)
+        G=fast_kronecker_random_graph(5,[[0.1,0.1],[0.1,0.1]],seed)
 
         G=watts_strogatz_graph(10,2,0.25,seed)
         assert_equal(len(G), 10)
@@ -127,3 +129,21 @@ class TestGeneratorsRandom():
         # infinite loop used to occur when a node has degree n-1 and needs to rewire
         watts_strogatz_graph(10, 9, 0.25, seed=0)
         newman_watts_strogatz_graph(10, 9, 0.5, seed=0)
+
+    def test_kronecker(self):
+        m=[[0,0],[0,0]]
+        G=kronecker_random_graph(4,m)
+        assert_equal(len(G),2**4)
+        assert_equal(len(G.edges()),0)
+
+        m=[[1,1],[1,1]]
+        G=kronecker_random_graph(4,m,directed=True)
+        assert_equal(len(G),2**4)
+        assert_equal(len(G.edges()),(2**4)**2)
+
+    def test_fast_kronecker(self):
+        m=[[0,0],[0,0]]
+        G=fast_kronecker_random_graph(4,m)
+        assert_equal(len(G),2**4)
+        assert_equal(len(G.edges()),0)
+
