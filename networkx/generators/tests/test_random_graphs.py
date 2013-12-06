@@ -153,6 +153,24 @@ class TestGeneratorsRandom():
         for i in range(16):
             assert_true(G.has_edge(0,i))
 
+        m=[[1,1],[0,0]]
+        G=kronecker_random_graph(0,m,directed=True)
+        assert_equal(len(G),1)
+        assert_equal(len(G.edges()),0)
+
+        m=[[1,1]]
+        assert_raises(networkx.exception.NetworkXError,
+                kronecker_random_graph,4,m)
+
+        m=[[1,1],[0,1]]
+        assert_raises(networkx.exception.NetworkXError,
+                kronecker_random_graph,4,m)
+
+        m=[[2,1],[1,1]]
+        assert_raises(networkx.exception.NetworkXError,
+                kronecker_random_graph,4,m)
+
+
     def test_fast_kronecker(self):
         m=[[0,0],[0,0]]
         G=fast_kronecker_random_graph(4,m)
@@ -175,3 +193,21 @@ class TestGeneratorsRandom():
         assert_equal(len(G.edges()),16)
         for i in range(16):
             assert_true(G.has_edge(0,i))
+
+        m=[[1,1],[0,0]]
+        G=fast_kronecker_random_graph(0,m,directed=True)
+        assert_equal(len(G),1)
+        assert_equal(len(G.edges()),0)
+
+        m=[[1,1]]
+        assert_raises(networkx.exception.NetworkXError,
+                fast_kronecker_random_graph,4,m)
+
+        m=[[1,1],[0,1]]
+        assert_raises(networkx.exception.NetworkXError,
+                fast_kronecker_random_graph,4,m)
+
+        m=[[2,1],[1,1]]
+        assert_raises(networkx.exception.NetworkXError,
+                fast_kronecker_random_graph,4,m)
+
