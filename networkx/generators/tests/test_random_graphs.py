@@ -141,9 +141,37 @@ class TestGeneratorsRandom():
         assert_equal(len(G),2**4)
         assert_equal(len(G.edges()),(2**4)**2)
 
+        m=[[1,0],[0,0]]
+        G=kronecker_random_graph(4,m,directed=True)
+        assert_equal(len(G.edges()),1)
+        assert_true(G.has_edge(0,0))
+        assert_true(not G.has_edge(0,1))
+
+        m=[[1,1],[0,0]]
+        G=kronecker_random_graph(4,m,directed=True)
+        assert_equal(len(G.edges()),16)
+        for i in range(16):
+            assert_true(G.has_edge(0,i))
+
     def test_fast_kronecker(self):
         m=[[0,0],[0,0]]
         G=fast_kronecker_random_graph(4,m)
         assert_equal(len(G),2**4)
         assert_equal(len(G.edges()),0)
 
+        m=[[1,1],[1,1]]
+        G=fast_kronecker_random_graph(4,m,directed=True)
+        assert_equal(len(G),16)
+        assert_equal(len(G.edges()),256)
+
+        m=[[1,0],[0,0]]
+        G=fast_kronecker_random_graph(4,m,directed=True)
+        assert_equal(len(G.edges()),1)
+        assert_true(G.has_edge(0,0))
+        assert_true(not G.has_edge(0,1))
+
+        m=[[1,1],[0,0]]
+        G=fast_kronecker_random_graph(4,m,directed=True)
+        assert_equal(len(G.edges()),16)
+        for i in range(16):
+            assert_true(G.has_edge(0,i))
