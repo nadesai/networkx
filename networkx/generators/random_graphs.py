@@ -971,6 +971,7 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=False):
     ----------
     mtx : square matrix of floats
         An n-by-n square "initiator" matrix of probabilities. May be a standard Python matrix or a NumPy matrix.
+        If the graph is undirected, must be symmetric.
     nIter : int
         The number of times mtx is Kronecker-powered, creating a stochastic adjacency matrix.
         The generated graph has n^{nIter} nodes, where n is the dimension of mtx as noted above.
@@ -989,6 +990,14 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=False):
     --------
     fast_kronecker_random_graph
 
+    Examples
+    --------
+    >>> nIter=4
+    >>> initiator=[[0.8,0.3],[0.3,0.2]]
+    >>> G=nx.kronecker_random_graph(nIter,initiator)
+    >>> initiator=[[0.8,0.7],[0.3,0.2]]
+    >>> G=nx.kronecker_random_graph(nIter,initiator,directed=True)
+ 
     References
     ----------
     .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, and Zoubin Ghahramani, 
@@ -1055,6 +1064,7 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=False):
     ----------
     mtx : square matrix of floats
         A square "initiator" matrix of probabilities. May be a standard Python matrix or a NumPy matrix.
+        If the graph is undirected, must be symmetric.
     nIter : int
         The number of times mtx is Kronecker-powered, creating a stochastic adjacency matrix.
         The generated graph has {dim}^{nIter} nodes, where dim is the dimension of mtx.
@@ -1076,6 +1086,12 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=False):
     --------
     kronecker_random_graph
 
+    Examples
+    --------
+    >>> nIter=4
+    >>> initiator=[[0.8,0.3],[0.3,0.2]]
+    >>> G=nx.fast_kronecker_random_graph(4,initiator)
+ 
     References
     ----------
     .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, and Zoubin Ghahramani, 
