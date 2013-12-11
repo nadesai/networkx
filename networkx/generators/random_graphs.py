@@ -896,21 +896,25 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     Parameters
     ----------
     mtx : square matrix of floats
-        An n-by-n square "initiator" matrix of probabilities. May be a standard Python matrix or a NumPy matrix.
-        If the graph is undirected, must be symmetric.
+        An n-by-n square "initiator" matrix of probabilities. May be a standard 
+        Python matrix or a NumPy matrix.  If the graph is undirected, 
+        must be symmetric.
     nIter : int
-        The number of times mtx is Kronecker-powered, creating a stochastic adjacency matrix.
-        The generated graph has n^{nIter} nodes, where n is the dimension of mtx as noted above.
+        The number of times mtx is Kronecker-powered, creating a stochastic 
+        adjacency matrix.  The generated graph has n^{nIter} nodes, 
+        where n is the dimension of mtx as noted above.
     seed : int, optional
         Seed for random number generator (default=None).
     directed : bool, optional
-        If True, return a directed graph, else return an undirected one (default=True).
+        If True, return a directed graph, else return an undirected one 
+        (default=True).
 
     Notes
     -----
-    The stochastic Kronecker graph generation algorithm takes as input a square matrix of
-    probabilities, computes the iterated Kronecker power of this matrix, and then uses the resulting
-    stochastic adjacency matrix to generate a graph. This algorithm is O(V^2), where V=n^{nIter}.
+    The stochastic Kronecker graph generation algorithm takes as input a 
+    square matrix of probabilities, computes the iterated Kronecker power of 
+    this matrix, and then uses the resulting stochastic adjacency matrix to 
+    generate a graph. This algorithm is O(V^2), where V=n^{nIter}.
 
     See Also
     --------
@@ -926,7 +930,8 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
  
     References
     ----------
-    .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, and Zoubin Ghahramani, 
+    .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, 
+           and Zoubin Ghahramani, 
        "Kronecker graphs: an approach to modeling networks",
        The Journal of Machine Learning Research, 11, 985-1042, 3/1/2010.
     """
@@ -988,24 +993,30 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     Parameters
     ----------
     mtx : square matrix of floats
-        A square "initiator" matrix of probabilities. May be a standard Python matrix or a NumPy matrix.
-        If the graph is undirected, must be symmetric.
+        An n-by-n square "initiator" matrix of probabilities. May be a standard 
+        Python matrix or a NumPy matrix.  If the graph is undirected, 
+        must be symmetric.
     nIter : int
-        The number of times mtx is Kronecker-powered, creating a stochastic adjacency matrix.
-        The generated graph has {dim}^{nIter} nodes, where dim is the dimension of mtx.
+        The number of times mtx is Kronecker-powered, creating a stochastic 
+        adjacency matrix.  The generated graph has {dim}^{nIter} nodes, 
+        where dim is the dimension of mtx.
     seed : int, optional
         Seed for random number generator (default=None).
     directed : bool, optional 
-        If True, return a directed graph, else return an undirected one (default=True).
+        If True, return a directed graph, else return an undirected one 
+        (default=True).
 
     Notes
     -----
-    The stochastic Kronecker graph generation algorithm takes as input a square matrix of
-    probabilities, computes the iterated Kronecker power of this matrix, and then uses the resulting
-    stochastic adjacency matrix to generate a graph. 
+    The stochastic Kronecker graph generation algorithm takes as input a 
+    square matrix of probabilities, computes the iterated Kronecker power of 
+    this matrix, and then uses the resulting stochastic adjacency matrix to 
+    generate a graph. 
 
-    This "fast" algorithm runs in O(E) time. It thus works best when the expected number of edges in the graph is roughly O(V).
-    The expected number of edges in the graph is given by d^{nIter}, where d=\sum_{i,j} mtx[i,j] is the sum of all the elements in mtx.
+    This "fast" algorithm runs in O(E) time. It thus works best when the expected
+    number of edges in the graph is roughly O(V).
+    The expected number of edges in the graph is given by d^{nIter}, where 
+    d=\sum_{i,j} mtx[i,j] is the sum of all the elements in mtx.
 
     See Also
     --------
@@ -1019,7 +1030,8 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
  
     References
     ----------
-    .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, and Zoubin Ghahramani, 
+    .. [1] Jure Leskovec, Deepayan Chakrabarti, Jon Kleinberg, Christos Faloutsos, 
+           and Zoubin Ghahramani, 
        "Kronecker graphs: an approach to modeling networks",
        The Journal of Machine Learning Research, 11, 985-1042, 3/1/2010.
     """
