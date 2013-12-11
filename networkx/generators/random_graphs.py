@@ -965,7 +965,7 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     if G.is_directed():
         edges=itertools.product(range(n),range(n))
     else:
-        edges=itertools.combinations_with_replacement(range(n),2)
+        edges=itertools.chain([(v,v) for v in range(n)], itertools.combinations(range(n),2))
 
     for e in edges:
         row,col=e
