@@ -890,7 +890,7 @@ def random_powerlaw_tree_sequence(n, gamma=3, seed=None, tries=100):
           "Exceeded max (%d) attempts for a valid tree sequence."%tries)
     return False
 
-def kronecker_random_graph(nIter, mtx, seed=None, directed=False):
+def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     """Return a random graph K_{nIter}[mtx] (Stochastic Kronecker graph).
 
     Parameters
@@ -903,8 +903,8 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=False):
         The generated graph has n^{nIter} nodes, where n is the dimension of mtx as noted above.
     seed : int, optional
         Seed for random number generator (default=None).
-    directed : bool, optional (default=False)
-        If True return a directed graph.
+    directed : bool, optional
+        If True, return a directed graph, else return an undirected one (default=True).
 
     Notes
     -----
@@ -932,10 +932,9 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=False):
     """
     dim = len(mtx) 
 
-    if directed:
-        errorstring = "The initiator matrix must be a nonempty square matrix of probabilities."
-    else:
-        errorstring = "The initiator matrix must be a nonempty, symmetric, square matrix of probabilities."
+    errorstring = ("The initiator matrix must be a nonempty" +
+                      (", symmetric," if not directed else "") +
+                      " square matrix of probabilities.")
 
     if dim==0: 
         raise nx.NetworkXError(errorstring)
@@ -983,7 +982,7 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=False):
     return G
 
 
-def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=False):
+def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     """Return a sparse random graph K_{nIter}[mtx] (Stochastic Kronecker graph).
 
     Parameters
@@ -996,8 +995,8 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=False):
         The generated graph has {dim}^{nIter} nodes, where dim is the dimension of mtx.
     seed : int, optional
         Seed for random number generator (default=None).
-    directed : bool, optional (default=False)
-        If True return a directed graph.
+    directed : bool, optional 
+        If True, return a directed graph, else return an undirected one (default=True).
 
     Notes
     -----
@@ -1026,10 +1025,10 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=False):
     """
     dim = len(mtx)
 
-    if directed:
-        errorstring = "The initiator matrix must be a nonempty square matrix of probabilities."
-    else:
-        errorstring = "The initiator matrix must be a nonempty, symmetric, square matrix of probabilities."
+    
+    errorstring = ("The initiator matrix must be a nonempty" +
+                      (", symmetric," if not directed else "") +
+                      " square matrix of probabilities.")
 
     if dim==0: 
         raise nx.NetworkXError(errorstring)
