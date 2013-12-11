@@ -964,19 +964,19 @@ def random_powerlaw_tree_sequence(n, gamma=3, seed=None, tries=100):
           "Exceeded max (%d) attempts for a valid tree sequence."%tries)
     return False
 
-def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
-    """Return a random graph K_{nIter}[mtx] (Stochastic Kronecker graph).
+def kronecker_random_graph(k, P, seed=None, directed=True):
+    """Return a random graph K_k[P] (Stochastic Kronecker graph).
 
     Parameters
     ----------
-    mtx : square matrix of floats
+    P : square matrix of floats
         An n-by-n square "initiator" matrix of probabilities. May be a standard 
         Python matrix or a NumPy matrix.  If the graph is undirected, 
         must be symmetric.
-    nIter : int
-        The number of times mtx is Kronecker-powered, creating a stochastic 
-        adjacency matrix.  The generated graph has n^{nIter} nodes, 
-        where n is the dimension of mtx as noted above.
+    k : int
+        The number of times P is Kronecker-powered, creating a stochastic 
+        adjacency matrix.  The generated graph has n^k nodes, 
+        where n is the dimension of P as noted above.
     seed : int, optional
         Seed for random number generator (default=None).
     directed : bool, optional
@@ -988,7 +988,7 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     The stochastic Kronecker graph generation algorithm takes as input a 
     square matrix of probabilities, computes the iterated Kronecker power of 
     this matrix, and then uses the resulting stochastic adjacency matrix to 
-    generate a graph. This algorithm is O(V^2), where V=n^{nIter}.
+    generate a graph. This algorithm is O(V^2), where V=n^k.
 
     See Also
     --------
@@ -996,11 +996,11 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
 
     Examples
     --------
-    >>> nIter=4
-    >>> initiator=[[0.8,0.3],[0.3,0.2]]
-    >>> G=nx.kronecker_random_graph(nIter,initiator)
-    >>> initiator=[[0.8,0.7],[0.3,0.2]]
-    >>> G=nx.kronecker_random_graph(nIter,initiator,directed=True)
+    >>> k=4
+    >>> P=[[0.8,0.3],[0.3,0.2]]
+    >>> G=nx.kronecker_random_graph(k,P)
+    >>> P=[[0.8,0.7],[0.3,0.2]]
+    >>> G=nx.kronecker_random_graph(k,P,directed=True)
  
     References
     ----------
@@ -1009,7 +1009,7 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
        "Kronecker graphs: an approach to modeling networks",
        The Journal of Machine Learning Research, 11, 985-1042, 3/1/2010.
     """
-    dim = len(mtx) 
+    dim = len(P) 
 
     errorstring = ("The initiator matrix must be a nonempty" +
                       (", symmetric," if not directed else "") +
@@ -1017,26 +1017,26 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
 
     if dim==0: 
         raise nx.NetworkXError(errorstring)
-    for i,arr in enumerate(mtx): 
+    for i,arr in enumerate(P): 
         if len(arr)!=dim: 
             raise nx.NetworkXError(errorstring)
         for j,p in enumerate(arr):
             if p<0 or p>1:
                 raise nx.NetworkXError(errorstring)
-            if not directed and mtx[i][j] != mtx[j][i]:
+            if not directed and P[i][j] != P[j][i]:
                 raise nx.NetworkXError(errorstring)
 
-    if nIter<1:
+    if k<1:
         return empty_graph(1)
 
-    n = dim**nIter
+    n = dim**k
     G = empty_graph(n)
  
     if directed:
         G=nx.DiGraph(G)
 
     G.add_nodes_from(range(n))
-    G.name="kronecker_random_graph(%s,%s)"%(n, mtx)
+    G.name="kronecker_random_graph(%s,%s)"%(n, P)
 
     if not seed is None:
         random.seed(seed)
@@ -1050,10 +1050,10 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
         row,col=e
         p=1.0
         initPow = 1
-        for i in range(nIter):
+        for i in range(k):
             rowVal = (row//initPow) % dim
             colVal = (col//initPow) % dim
-            p = p*(mtx[rowVal][colVal])
+            p = p*(P[rowVal][colVal])
             initPow = initPow*dim
         if random.random() < p:
             G.add_edge(*e)
@@ -1061,19 +1061,19 @@ def kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     return G
 
 
-def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
-    """Return a sparse random graph K_{nIter}[mtx] (Stochastic Kronecker graph).
+def fast_kronecker_random_graph(k, P, seed=None, directed=True):
+    """Return a sparse random graph K_k[P] (Stochastic Kronecker graph).
 
     Parameters
     ----------
-    mtx : square matrix of floats
+    P : square matrix of floats
         An n-by-n square "initiator" matrix of probabilities. May be a standard 
         Python matrix or a NumPy matrix.  If the graph is undirected, 
         must be symmetric.
-    nIter : int
-        The number of times mtx is Kronecker-powered, creating a stochastic 
-        adjacency matrix.  The generated graph has {dim}^{nIter} nodes, 
-        where dim is the dimension of mtx.
+    k : int
+        The number of times P is Kronecker-powered, creating a stochastic 
+        adjacency matrix.  The generated graph has n^k nodes, 
+        where n is the dimension of P as noted above.
     seed : int, optional
         Seed for random number generator (default=None).
     directed : bool, optional 
@@ -1089,8 +1089,8 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
 
     This "fast" algorithm runs in O(E) time. It thus works best when the expected
     number of edges in the graph is roughly O(V).
-    The expected number of edges in the graph is given by d^{nIter}, where 
-    d=\sum_{i,j} mtx[i,j] is the sum of all the elements in mtx.
+    The expected number of edges in the graph is given by d^k, where 
+    d=\sum_{i,j} P[i,j] is the sum of all the elements in P.
 
     See Also
     --------
@@ -1098,9 +1098,9 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
 
     Examples
     --------
-    >>> nIter=4
-    >>> initiator=[[0.8,0.3],[0.3,0.2]]
-    >>> G=nx.fast_kronecker_random_graph(4,initiator)
+    >>> k=4
+    >>> P=[[0.8,0.3],[0.3,0.2]]
+    >>> G=nx.fast_kronecker_random_graph(k,P)
  
     References
     ----------
@@ -1109,7 +1109,7 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
        "Kronecker graphs: an approach to modeling networks",
        The Journal of Machine Learning Research, 11, 985-1042, 3/1/2010.
     """
-    dim = len(mtx)
+    dim = len(P)
 
     
     errorstring = ("The initiator matrix must be a nonempty" +
@@ -1118,19 +1118,19 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
 
     if dim==0: 
         raise nx.NetworkXError(errorstring)
-    for i,arr in enumerate(mtx): 
+    for i,arr in enumerate(P): 
         if len(arr)!=dim: 
             raise nx.NetworkXError(errorstring)
         for j,p in enumerate(arr):
             if p<0 or p>1:
                 raise nx.NetworkXError(errorstring)
-            if not directed and mtx[i][j] != mtx[j][i]:
+            if not directed and P[i][j] != P[j][i]:
                 raise nx.NetworkXError(errorstring)
 
-    if nIter<1:
+    if k<1:
         return empty_graph(1)
 
-    n = dim**nIter
+    n = dim**k
     G = empty_graph(n)
     G=nx.DiGraph(G)
 
@@ -1138,26 +1138,26 @@ def fast_kronecker_random_graph(nIter, mtx, seed=None, directed=True):
     partitions = []
     for i in range(dim):
         for j in range(dim):
-            if mtx[i][j] != 0:
-                acc = acc+mtx[i][j]
+            if P[i][j] != 0:
+                acc = acc+P[i][j]
                 partitions.append([acc,i,j])
-    mtx_sum = acc
+    psum = acc
 
     G.add_nodes_from(range(n))
-    G.name="fast_kronecker_random_graph(%s,%s)"%(n, mtx)
+    G.name="fast_kronecker_random_graph(%s,%s)"%(n, P)
 
     if not seed is None:
         random.seed(seed)
 
-    expected_edges=math.floor(mtx_sum**nIter)
+    expected_edges=math.floor(psum**k)
     num_edges = 0
     while num_edges<expected_edges:
-        multiplier = dim**nIter
+        multiplier = dim**k
         x = y = 0
-        for i in range(nIter):
+        for i in range(k):
             multiplier = multiplier // dim
             r = c = -1
-            p = random.uniform(0,mtx_sum)
+            p = random.uniform(0,psum)
             for n in range(len(partitions)):
                 if partitions[n][0] >= p:
                     r = partitions[n][1]
