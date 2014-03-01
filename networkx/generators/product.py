@@ -10,7 +10,8 @@
 __author__ = "\n".join(["Aric Hagberg (hagberg@lanl.gov)",
                         "Pieter Swart (swart@lanl.gov)",
                         "Dan Schult (dschult@colgate.edu)",
-                        "chebee7i (chebee7i@gmail.com)"])
+                        "chebee7i (chebee7i@gmail.com)",
+                        "Nikhil Desai (nikhilarundesai@gmail.com)"])
 
 import itertools
 import random
