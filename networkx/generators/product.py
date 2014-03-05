@@ -21,7 +21,7 @@ from networkx.generators.classic import empty_graph
 
 __all__ = ['kronecker_graph',
            'kronecker_random_graph',
-           'fast_kronecker_random_graph']
+           'kronecker2_random_graph']
 
 def kronecker_graph(k, G):
     I = adjacency_matrix(G)
@@ -59,7 +59,7 @@ def kronecker_random_graph(k, P, seed=None, directed=True):
 
     See Also
     --------
-    fast_kronecker_random_graph
+    kronecker2_random_graph
 
     Examples
     --------
@@ -128,7 +128,7 @@ def kronecker_random_graph(k, P, seed=None, directed=True):
     return G
 
 
-def fast_kronecker_random_graph(k, P, seed=None, directed=True):
+def kronecker2_random_graph(k, P, seed=None, directed=True):
     """Return a sparse random graph K_k[P] (Stochastic Kronecker graph).
 
     Parameters
@@ -167,7 +167,7 @@ def fast_kronecker_random_graph(k, P, seed=None, directed=True):
     --------
     >>> k=4
     >>> P=[[0.8,0.3],[0.3,0.2]]
-    >>> G=nx.fast_kronecker_random_graph(k,P)
+    >>> G=nx.kronecker2_random_graph(k,P)
  
     References
     ----------
@@ -211,7 +211,7 @@ def fast_kronecker_random_graph(k, P, seed=None, directed=True):
     psum = acc
 
     G.add_nodes_from(range(n))
-    G.name="fast_kronecker_random_graph(%s,%s)"%(n, P)
+    G.name="kronecker2_random_graph(%s,%s)"%(n, P)
 
     if not seed is None:
         random.seed(seed)
