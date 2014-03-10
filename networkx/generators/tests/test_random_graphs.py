@@ -127,4 +127,3 @@ class TestGeneratorsRandom():
         # infinite loop used to occur when a node has degree n-1 and needs to rewire
         watts_strogatz_graph(10, 9, 0.25, seed=0)
         newman_watts_strogatz_graph(10, 9, 0.5, seed=0)
-
