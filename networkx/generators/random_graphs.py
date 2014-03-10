@@ -38,6 +38,7 @@ __all__ = ['fast_gnp_random_graph',
            'random_powerlaw_tree',
            'random_powerlaw_tree_sequence']
 
+
 #-------------------------------------------------------------------------
 #  Some Famous Random Graphs
 #-------------------------------------------------------------------------
