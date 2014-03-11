@@ -1,5 +1,7 @@
 # -*- coding: ascii -*-
 """
+Generators for graphs based on product operations.
+
 """
 #    Copyright (C) 2013 by
 #    Aric Hagberg <hagberg@lanl.gov>
