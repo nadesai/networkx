@@ -26,12 +26,19 @@ __all__ = ['kronecker_graph',
            'kronecker2_random_graph']
 
 def kronecker_graph(k, G):
-    I = adjacency_matrix(G)
+    """Return the kth Kronecker power of the graph G.
 
-    if G.is_directed():
-        return kronecker_random_graph(k,I,True)
-    else:
-        return kronecker_random_graph(k,I,False)
+    Parameters
+    ----------
+    G : graph
+        The graph used as the base of the Kronecker power
+    k : int
+        The exponent of the Kronecker power.
+    """
+
+    raise NotImplementedError("Not implemented yet")
+
+    ## TODO: compute Kronecker graph by repeated squaring.
 
 def kronecker_random_graph(k, P, seed=None, directed=True):
     """Return a random graph K_k[P] (Stochastic Kronecker graph).

@@ -6,6 +6,7 @@ from networkx.generators.product import *
 class TestGeneratorsProduct():
     def smoke_test_product_graph(self):
         seed = 42
+        G=kronecker_graph(5,path_graph(2))
         G=kronecker_random_graph(5,[[0.1,0.1],[0.1,0.1]],seed)
         G=kronecker2_random_graph(5,[[0.1,0.1],[0.1,0.1]],seed)
 
