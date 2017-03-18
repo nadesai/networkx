@@ -6,24 +6,27 @@ Graph generators
 
 .. currentmodule:: networkx
 
+
 Atlas
 -----
 .. automodule:: networkx.generators.atlas
 .. autosummary::
    :toctree: generated/
 
+   graph_atlas
    graph_atlas_g
+
 
 Classic
 -------
 .. automodule:: networkx.generators.classic
 .. autosummary::
    :toctree: generated/
-   
+
    balanced_tree
    barbell_graph
    complete_graph
-   complete_bipartite_graph
+   complete_multipartite_graph
    circular_ladder_graph
    cycle_graph
    dorogovtsev_goltsev_mendes_graph
@@ -37,7 +40,19 @@ Classic
    path_graph
    star_graph
    trivial_graph
+   turan_graph
    wheel_graph
+
+
+Expanders
+---------
+.. automodule:: networkx.generators.expanders
+.. autosummary::
+   :toctree: generated/
+
+   margulis_gabber_galil_graph
+   chordal_cycle_graph
+
 
 Small
 -----
@@ -88,10 +103,21 @@ Random Graphs
    random_regular_graph
    barabasi_albert_graph
    powerlaw_cluster_graph
+   random_kernel_graph
    random_lobster
    random_shell_graph
    random_powerlaw_tree
    random_powerlaw_tree_sequence
+
+
+Duplication Divergence
+----------------------
+.. automodule:: networkx.generators.duplication
+.. autosummary::
+   :toctree: generated/
+
+   duplication_divergence_graph
+   partial_duplication_graph
 
 
 Degree Sequence
@@ -108,6 +134,7 @@ Degree Sequence
    directed_havel_hakimi_graph
    degree_sequence_tree
    random_degree_sequence_graph
+
 
 Random Clustered
 ----------------
@@ -128,6 +155,7 @@ Directed
    gn_graph
    gnr_graph
    gnc_graph
+   random_k_out_graph
    scale_free_graph
 
 
@@ -141,32 +169,6 @@ Geometric
    geographical_threshold_graph
    waxman_graph
    navigable_small_world_graph
-
-
-Hybrid
-------
-.. automodule:: networkx.generators.hybrid
-.. autosummary::
-   :toctree: generated/
-
-   kl_connected_subgraph
-   is_kl_connected
-
-
-Bipartite
----------
-.. automodule:: networkx.generators.bipartite
-.. autosummary::
-   :toctree: generated/
-
-   bipartite_configuration_model
-   bipartite_havel_hakimi_graph
-   bipartite_reverse_havel_hakimi_graph
-   bipartite_alternating_havel_hakimi_graph
-   bipartite_preferential_attachment_graph
-   bipartite_random_graph
-   bipartite_gnmk_random_graph
-
 
 Line Graph
 ----------
@@ -185,6 +187,7 @@ Ego Graph
 
    ego_graph
 
+
 Stochastic
 ----------
 .. automodule:: networkx.generators.stochastic
@@ -192,6 +195,7 @@ Stochastic
    :toctree: generated/
 
    stochastic_graph
+
 
 Intersection
 ------------
@@ -203,6 +207,7 @@ Intersection
    k_random_intersection_graph
    general_random_intersection_graph
 
+
 Social Networks
 ---------------
 .. automodule:: networkx.generators.social
@@ -212,4 +217,57 @@ Social Networks
    karate_club_graph
    davis_southern_women_graph
    florentine_families_graph
+
+
+Community
+---------
+.. automodule:: networkx.generators.community
+.. autosummary::
+   :toctree: generated/
+
+   caveman_graph
+   connected_caveman_graph
+   relaxed_caveman_graph
+   random_partition_graph
+   planted_partition_graph
+   gaussian_random_partition_graph
+   ring_of_cliques
+
+
+Trees
+-----
+.. automodule:: networkx.generators.tree
+.. autosummary::
+   :toctree: generated/
+
+   random_tree
+
+
+Non Isomorphic Trees
+--------------------
+.. automodule:: networkx.generators.nonisomorphic_trees
+.. autosummary::
+   :toctree: generated/
+
+   nonisomorphic_trees
+   number_of_nonisomorphic_trees
+
+
+Triads
+------
+.. automodule:: networkx.generators.triads
+.. autosummary::
+   :toctree: generated/
+
+   triad_graph
+
+
+Joint Degree Sequence
+---------------------
+.. automodule:: networkx.generators.joint_degree_seq
+.. autosummary::
+   :toctree: generated/
+
+   is_valid_joint_degree
+   joint_degree_graph
 

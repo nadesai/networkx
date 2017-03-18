@@ -31,7 +31,7 @@ class TestGraphMatrix(object):
                             [1, 0, 0, 0, 0],
                             [0, 0, 0, 0, 0]])
         self.WG=nx.Graph( (u,v,{'weight':0.5,'other':0.3})
-                for (u,v) in self.G.edges_iter() )
+                for (u,v) in self.G.edges() )
         self.WG.add_node(4)
         self.WA=numpy.array([[0 , 0.5, 0.5, 0.5, 0],
                             [0.5, 0  , 0.5, 0  , 0],
@@ -51,6 +51,8 @@ class TestGraphMatrix(object):
                             [0, 0, 1, 0, 1],
                             [0, 0, 0, 1, 0],
                             [0, 0, 0, 0, 0]])
+        self.no_edges_G=nx.Graph([(1, 2), (3, 2, {'weight':8})])
+        self.no_edges_A=numpy.array([[0, 0], [0, 0]])
 
     def test_incidence_matrix(self):
         "Conversion to incidence matrix"
@@ -69,7 +71,7 @@ class TestGraphMatrix(object):
         assert_equal(nx.incidence_matrix(self.WG,oriented=True,weight='other').todense(),
                      0.3*self.OI)
         WMG=nx.MultiGraph(self.WG)
-        WMG.add_edge(0,1,attr_dict={'weight':0.5,'other':0.3})
+        WMG.add_edge(0,1,weight=0.5,other=0.3)
         assert_equal(nx.incidence_matrix(WMG,weight='weight').todense(),
                      numpy.abs(0.5*self.MGOI))
         assert_equal(nx.incidence_matrix(WMG,weight='weight',oriented=True).todense(),
@@ -87,3 +89,4 @@ class TestGraphMatrix(object):
         assert_equal(nx.adj_matrix(self.WG,weight=None).todense(),self.A)
         assert_equal(nx.adj_matrix(self.MG2,weight=None).todense(),self.MG2A)
         assert_equal(nx.adj_matrix(self.WG,weight='other').todense(),0.6*self.WA)
+        assert_equal(nx.adj_matrix(self.no_edges_G,nodelist=[1,3]).todense(),self.no_edges_A)
